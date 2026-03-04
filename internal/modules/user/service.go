@@ -25,18 +25,18 @@ func (s *Service) AddUser(createUserDto CreateUserDTO) error {
 	if createUserDto.Bio == "" {
 		return ErrBioIsNil
 	}
-	if createUserDto.PasswordHash == "" {
+	if createUserDto.Password == "" {
 		return ErrPasswordIsNil
 	}
-	password, err := hasher.HashPassword(createUserDto.PasswordHash)
+	password, err := hasher.HashPassword(createUserDto.Password)
 	if err != nil {
 		return err
 	}
-	createUserDto.PasswordHash = password
+	createUserDto.Password = password
 	return s.repository.Insert(createUserDto)
 }
 
-func (s *Service) GetUsers() ([]User, error) {
+func (s *Service) GetUsers() ([]UserPreviewPerson, error) {
 	return s.repository.FindMany()
 }
 
@@ -56,7 +56,7 @@ func (s *Service) LoginUser(userLogin LoginUserDTO) (string, error) {
 		return "", ErrNotFound
 	}
 
-	if hasher.ComparePassword(user.PasswordHash, userLogin.Password) {
+	if !hasher.ComparePassword(user.PasswordHash, userLogin.Password) {
 		return "", ErrIncorrectPassword
 	}
 

@@ -27,21 +27,22 @@ func (r *Repository) Insert(createUserDto CreateUserDTO) error {
 
 	_, err := r.conn.Exec(
 		ctx, "INSERT INTO users (nameuser,passwordhash,bio) VALUES ($1,$2,$3)",
-		createUserDto.Username, createUserDto.PasswordHash, createUserDto.Bio,
+		createUserDto.Username, createUserDto.Password, createUserDto.Bio,
 	)
 	return err
 }
-func (r *Repository) FindMany() ([]User, error) {
+func (r *Repository) FindMany() ([]UserPreviewPerson, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	rows, err := r.conn.Query(ctx, "SELECT nameuser,bio,created_at FROM users")
 	if err != nil {
 		return nil, err
 	}
-	var Users []User
+	defer rows.Close()
+	var Users []UserPreviewPerson
 	for rows.Next() {
-		var User User
-		if err := rows.Scan(&User.Username, &User.Bio, &User.CreatedAt); err != nil {
+		var User UserPreviewPerson
+		if err := rows.Scan(&User.Username, &User.Bio, &User.Created_At); err != nil {
 			return nil, err
 		}
 		Users = append(Users, User)
