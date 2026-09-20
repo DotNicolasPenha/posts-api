@@ -11,14 +11,6 @@
 ### Tecnologias: 
  Docker,Postgres,Gin-Gonic
 
-## Utilize o projeto: 
-  Este projeto já está no ar em: 
-``` 
-posts-crud-3qsk.onrender.com/posts
-``` 
-```
-posts-crud-3qsk.onrender.com/users
-```
 ## Rotas:
 ### /Users
 - #### GET /users retorna todos os usuários
